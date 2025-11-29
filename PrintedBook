@@ -1,26 +1,46 @@
 package libraryManagementSystem;
 
 /**
- * This class contains the information about 
- * a PrintedBook such as its page number, etc.
- * It also contains the methods to borrow
+ * This class contains the information about a PrintedBook such 
+ * as its page number, etc. It also contains the methods to borrow 
  * and return the book.
  * 
  * @author samar
  * @author dayanna
  * @author chanel
  */
-public class PrintedBook {
-
-	private double fileSize;
+public class PrintedBook extends Book implements Borrowable {
 	private String format;
 	private int pages;
-	
-	public void borrowBook() {
-		
+
+	/**
+	 * 
+	 * @param isbn
+	 * @param title
+	 * @param author
+	 * @param genre
+	 * @param available
+	 * @param format
+	 * @param pages
+	 */
+	public PrintedBook(String isbn, String title, String author, 
+			Genre genre, boolean available, String format, int pages) {
+		super(isbn, title, author, genre, available);
+		this.format = format;
+		this.pages = pages;
 	}
-	
+
+	/**
+	 * 
+	 */
+	public void borrowBook() {
+
+	}
+
+	/**
+	 * 
+	 */
 	public void returnBook() {
-		
+
 	}
 }
