@@ -11,12 +11,14 @@ package libraryManagementSystem;
 public interface Borrowable {
 
 	/**
-	 * 
+	 * Allows the user to borrow a book if it is available and 
+	 * adds the book to the borrowed map.
 	 */
 	void borrowBook();
 
 	/**
-	 * 
+	 * Allows the user to return a book to make it available again
+	 * and removes the book from the borrowed map.
 	 */
 	void returnBook();
 }
