@@ -1,0 +1,15 @@
+package libraryManagementSystem;
+
+/**
+ * This enum contains the nine different genres
+ * a book in the system could be.
+ * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
+ */
+public enum Genre {
+
+	FICTION, NONFICTION, SCIENCE_FICTION, HISTORICAL,
+	FANTASY, MYSTERY, YOUNG_ADULT, HORROR, POETRY;
+}
