@@ -1,0 +1,15 @@
+package libraryManagementSystem;
+
+/**
+ * This interface allows the user to borrow a 
+ * book or return it.
+ * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
+ */
+public interface Borrowable {
+	
+	void borrowBook();
+	void returnBook();
+}
