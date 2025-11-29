@@ -24,6 +24,20 @@ public class Library {
 
 	/**
 	 * 
+	 * @param user
+	 * @return
+	 */
+	public int getBorrowedCount(User user) {
+	    List<Book> list = borrowedBooks.get(user);
+	    return (list == null) ? 0 : list.size();
+	}
+	
+	 public int getRemainingAllowance(User user) {
+	     return user.getMaxBooks() - getBorrowedCount(user);
+	 }
+
+	/**
+	 * 
 	 * @param book
 	 */
 	public void addBook(Book book) {
@@ -44,7 +58,20 @@ public class Library {
 	 * @param book
 	 */
 	public void borrowBook(User user, Book book) {
-
+		if (!book.isAvailable()) {
+			System.out.println("Sorry, this book is not available.");
+			return;
+		}
+		
+		int borrowed = getBorrowedCount(user);
+		
+		if (borrowed >= user.getMaxBooks()) {
+			System.out.println(user + " has reached max book limit.");
+			return;
+		}
+		
+		borrowedBooks.computeIfAbsent(user, k -> new ArrayList<>()).add(book);
+		book.borrowBook();
 	}
 
 	/**
@@ -53,7 +80,14 @@ public class Library {
 	 * @param book
 	 */
 	public void returnBook(User user, Book book) {
-
+		List<Book> list = borrowedBooks.get(user);
+		
+		if (list != null && list.remove(book)) {
+			book.returnBook();
+		}
+		else {
+			System.out.println("Book was not borrowed by this user.");
+		}
 	}
 
 	/**
