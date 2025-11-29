@@ -1,0 +1,37 @@
+package libraryManagementSystem;
+
+/**
+ * This class checks the max amount of books a teacher can 
+ * borrow and prints it out.
+ * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
+ */
+public class TeacherUser extends User {
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 */
+	public TeacherUser(String id, String name) {
+		super(id, name, 10);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getMaxBooks() {
+		return 0;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return "TeacherUser []";
+	}
+}
