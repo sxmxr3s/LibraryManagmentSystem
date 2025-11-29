@@ -14,10 +14,11 @@ public abstract class User {
 	private int maxBooks;
 
 	/**
+	 * Initializes the id, name, and maxBooks of a user.
 	 * 
-	 * @param id
-	 * @param name
-	 * @param maxBooks
+	 * @param id User ID.
+	 * @param name User Name.
+	 * @param maxBooks Max borrow-able books for user.
 	 */
 	public User(String id, String name, int maxBooks) {
 		this.id = id;
@@ -26,16 +27,23 @@ public abstract class User {
 	}
 
 	/**
+	 * Tells user what the max amount of books they can borrow is.
 	 * 
-	 * @return
+	 * @return Max number of books that can be borrowed.
 	 */
 	public abstract int getMaxBooks();
 
 	/**
+	 * This class overrides the toString() method and prints it in 
+	 * this format:
 	 * 
+	 * "User: {id}
+	 * Name: {name}
+	 * Max Books Allowed: {maxBooks}"
 	 */
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", maxBooks=" + maxBooks + "]";
+		return "User: " + id + "\nName: " + name + "\nMax Books Allowed: " + 
+				maxBooks;
 	}
 }
