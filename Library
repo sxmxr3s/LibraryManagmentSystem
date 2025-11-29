@@ -1,0 +1,74 @@
+package libraryManagementSystem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 
+ */
+public class Library {
+	private List<Book> books;
+	private List<User> users;
+	private Map<User, List<Book>> borrowedBooks;
+
+	/**
+	 * 
+	 */
+	public Library() {
+		books = new ArrayList<>();
+		users = new ArrayList<>();
+		borrowedBooks = new HashMap<>();
+	}
+
+	/**
+	 * 
+	 * @param book
+	 */
+	public void addBook(Book book) {
+
+	}
+
+	/**
+	 * 
+	 * @param user
+	 */
+	public void addUser(User user) {
+
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param book
+	 */
+	public void borrowBook(User user, Book book) {
+
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param book
+	 */
+	public void returnBook(User user, Book book) {
+
+	}
+
+	/**
+	 * 
+	 * @param filename
+	 */
+	public void saveToFile(String filename) {
+
+	}
+
+	/**
+	 * 
+	 * @param filename
+	 */
+	public void loadFromFile(String filename) {
+
+	}
+}
