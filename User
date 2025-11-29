@@ -21,8 +21,6 @@ public abstract class User {
 	 * @param maxBooks Max borrow-able books for user.
 	 */
 	public User(String id, String name, int maxBooks) {
-		this.id = id;
-		this.name = name;
 		this.maxBooks = maxBooks;
 	}
 
@@ -43,7 +41,25 @@ public abstract class User {
 	 */
 	@Override
 	public String toString() {
-		return "User: " + id + "\nName: " + name + "\nMax Books Allowed: " + 
-				maxBooks;
+		return "User: " + getId() + "\nName: " + getName() + 
+				"\nMax Books Allowed: " + maxBooks;
+	}
+
+	/**
+	 * Gets the user ID.
+	 * 
+	 * @return The ID.
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Gets the name.
+	 * 
+	 * @return The name.
+	 */
+	public String getName() {
+		return name;
 	}
 }
