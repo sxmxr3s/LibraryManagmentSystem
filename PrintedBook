@@ -14,14 +14,16 @@ public class PrintedBook extends Book implements Borrowable {
 	private int pages;
 
 	/**
+	 * Initializes the format and pages before getting the ISBN,
+	 * title, author, genre, and availability from the superclass Book.
 	 * 
-	 * @param isbn
-	 * @param title
-	 * @param author
-	 * @param genre
-	 * @param available
-	 * @param format
-	 * @param pages
+	 * @param isbn ISBN code.
+	 * @param title Title of book.
+	 * @param author Author of book.
+	 * @param genre Genre of book.
+	 * @param available The book's availability.
+	 * @param format The format of the book.
+	 * @param pages The number of pages in the book.
 	 */
 	public PrintedBook(String isbn, String title, String author, 
 			Genre genre, boolean available, String format, int pages) {
@@ -31,14 +33,14 @@ public class PrintedBook extends Book implements Borrowable {
 	}
 
 	/**
-	 * 
+	 * Allows the user to borrow the book if available.
 	 */
 	public void borrowBook() {
-
+		
 	}
 
 	/**
-	 * 
+	 * Allows the user to return the book and change it availability.
 	 */
 	public void returnBook() {
 
