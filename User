@@ -21,6 +21,8 @@ public abstract class User {
 	 * @param maxBooks Max borrow-able books for user.
 	 */
 	public User(String id, String name, int maxBooks) {
+		this.id = id;
+		this.name = name;
 		this.maxBooks = maxBooks;
 	}
 
