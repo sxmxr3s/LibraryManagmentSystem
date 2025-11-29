@@ -36,14 +36,14 @@ public class Book implements Borrowable {
 	 * 
 	 */
 	public void borrowBook() {
-
+		this.available = false;
 	}
 
 	/**
 	 * 
 	 */
 	public void returnBook() {
-
+		this.available = true;
 	}
 
 	/**
@@ -53,5 +53,12 @@ public class Book implements Borrowable {
 	public String toString() {
 		return "Book [isbn=" + isbn + ", title=" + title + ", author=" + author + ", genre=" + genre + ", available="
 				+ available + "]";
+	}
+
+	/**
+	 * @return the available
+	 */
+	public boolean isAvailable() {
+		return available;
 	}
 }
