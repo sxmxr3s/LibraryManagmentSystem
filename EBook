@@ -1,26 +1,41 @@
 package libraryManagementSystem;
 
 /**
- * This class contains the information about 
- * a EBook such as its page number, etc.
- * It also contains the methods to borrow
- * and return a book.
+ * This class contains the information about a EBook such as 
+ * its page number, etc. It also contains the methods to borrow 
+ * and return the book.
  * 
  * @author samar
  * @author dayanna
  * @author chanel
  */
-public class EBook {
-
+public class EBook extends Book implements Borrowable {
 	private double filesize;
 	private String format;
 	private int pages;
-	
-	public void borrowBook() {
-		
+
+	/**
+	 * 
+	 */
+	public EBook(String isbn, String title, String author, Genre genre, 
+			boolean available, double filesize, String format, int pages) {
+		super(isbn, title, author, genre, available);
+		this.filesize = filesize;
+		this.format = format;
+		this.pages = pages;
 	}
-	
+
+	/**
+	 * 
+	 */
+	public void borrowBook() {
+
+	}
+
+	/**
+	 * 
+	 */
 	public void returnBook() {
-		
+
 	}
 }
