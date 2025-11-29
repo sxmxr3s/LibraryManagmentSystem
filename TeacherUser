@@ -11,27 +11,34 @@ package libraryManagementSystem;
 public class TeacherUser extends User {
 
 	/**
+	 * Initializes the ID and name from the superclass User.
 	 * 
-	 * @param id
-	 * @param name
+	 * @param id Teacher ID.
+	 * @param name Teacher name.
 	 */
 	public TeacherUser(String id, String name) {
 		super(id, name, 10);
 	}
 
 	/**
+	 * Tells the teacher what the max amount of books that can be 
+	 * borrowed is.
 	 * 
-	 * @return
+	 * @return Maximum books allowed.
 	 */
 	public int getMaxBooks() {
-		return 0;
+		return 10;
 	}
 
 	/**
+	 * Overrides the toString() method and prints it out in this format:
 	 * 
+	 * "Teacher User: [{id}, {name}]
+	 * Maximum Books Allowed: {maxBooks}"
 	 */
 	@Override
 	public String toString() {
-		return "TeacherUser []";
+		return "Teacher User: [" + getId() + ", " + getName() + 
+				"]\nMaximum Books Allowed: " + getMaxBooks();
 	}
 }
