@@ -1,0 +1,41 @@
+package libraryManagementSystem;
+
+/**
+ * This class contains a users information and the method to see 
+ * the max amount of books allowed.
+ * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
+ */
+public abstract class User {
+	private String id;
+	private String name;
+	private int maxBooks;
+
+	/**
+	 * 
+	 * @param id
+	 * @param name
+	 * @param maxBooks
+	 */
+	public User(String id, String name, int maxBooks) {
+		this.id = id;
+		this.name = name;
+		this.maxBooks = maxBooks;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract int getMaxBooks();
+
+	/**
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", maxBooks=" + maxBooks + "]";
+	}
+}
