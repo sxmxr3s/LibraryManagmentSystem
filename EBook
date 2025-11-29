@@ -1,0 +1,26 @@
+package libraryManagementSystem;
+
+/**
+ * This class contains the information about 
+ * a EBook such as its page number, etc.
+ * It also contains the methods to borrow
+ * and return a book.
+ * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
+ */
+public class EBook {
+
+	private double filesize;
+	private String format;
+	private int pages;
+	
+	public void borrowBook() {
+		
+	}
+	
+	public void returnBook() {
+		
+	}
+}
