@@ -1,0 +1,26 @@
+package libraryManagementSystem;
+
+/**
+ * This class contains the information about 
+ * a PrintedBook such as its page number, etc.
+ * It also contains the methods to borrow
+ * and return the book.
+ * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
+ */
+public class PrintedBook {
+
+	private double fileSize;
+	private String format;
+	private int pages;
+	
+	public void borrowBook() {
+		
+	}
+	
+	public void returnBook() {
+		
+	}
+}
