@@ -182,7 +182,6 @@ public class LibraryGUI extends JFrame {
         JPanel panel = createBasePanel();
         panel.setLayout(new BorderLayout());
 
-        // ----- NORTH: title + buttons -----
         JPanel northPanel = new JPanel();
         northPanel.setOpaque(false);
         northPanel.setLayout(new GridBagLayout());
@@ -213,13 +212,11 @@ public class LibraryGUI extends JFrame {
 
         panel.add(northPanel, BorderLayout.NORTH);
 
-        // ----- CENTER: table -----
         booksTable = new JTable();
         JScrollPane scroll = new JScrollPane(booksTable);
         scroll.getViewport().setBackground(new Color(252, 244, 207));
         panel.add(scroll, BorderLayout.CENTER);
 
-        // ----- SOUTH: back button -----
         JButton backButton = createBlueButton("Back to Menu");
         JPanel bottom = new JPanel();
         bottom.setOpaque(false);
@@ -244,7 +241,6 @@ public class LibraryGUI extends JFrame {
         JPanel panel = createBasePanel();
         panel.setLayout(new BorderLayout());
 
-        // ----- NORTH: title + buttons -----
         JPanel northPanel = new JPanel();
         northPanel.setOpaque(false);
         northPanel.setLayout(new GridBagLayout());
