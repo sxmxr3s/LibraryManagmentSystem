@@ -6,103 +6,175 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This class manages the collections of books and users,
+ * as well as the borrowing relationships between them.
+ * It provides methods to add books/users and to borrow/return books.
  * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
  */
 public class Library {
-	private List<Book> books;
-	private List<User> users;
-	private Map<User, List<Book>> borrowedBooks;
+    private List<Book> books;
+    private List<User> users;
+    private Map<User, List<Book>> borrowedBooks;
 
-	/**
-	 * 
-	 */
-	public Library() {
-		books = new ArrayList<>();
-		users = new ArrayList<>();
-		borrowedBooks = new HashMap<>();
-	}
+    /**
+     * Initializes the collections used in the Library.
+     */
+    public Library() {
+        books = new ArrayList<>();
+        users = new ArrayList<>();
+        borrowedBooks = new HashMap<>();
+    }
 
-	/**
-	 * 
-	 * @param user
-	 * @return
-	 */
-	public int getBorrowedCount(User user) {
-	    List<Book> list = borrowedBooks.get(user);
-	    return (list == null) ? 0 : list.size();
-	}
-	
-	 public int getRemainingAllowance(User user) {
-	     return user.getMaxBooks() - getBorrowedCount(user);
-	 }
+    /**
+     * Gets the number of books that a user has currently borrowed.
+     * 
+     * @param user The user.
+     * @return Count of borrowed books.
+     */
+    public int getBorrowedCount(User user) {
+        List<Book> list = borrowedBooks.get(user);
+        return (list == null) ? 0 : list.size();
+    }
 
-	/**
-	 * 
-	 * @param book
-	 */
-	public void addBook(Book book) {
+    /**
+     * Gets the number of remaining books a user is allowed to borrow.
+     * 
+     * @param user The user.
+     * @return Remaining allowance.
+     */
+    public int getRemainingAllowance(User user) {
+        return user.getMaxBooks() - getBorrowedCount(user);
+    }
 
-	}
+    /**
+     * Adds a book to the library collection.
+     * 
+     * @param book The book to add.
+     */
+    public void addBook(Book book) {
+        books.add(book);
+    }
 
-	/**
-	 * 
-	 * @param user
-	 */
-	public void addUser(User user) {
+    /**
+     * Removes a book from the library collection.
+     * Also removes it from any borrowed lists.
+     * 
+     * @param book The book to remove.
+     */
+    public void removeBook(Book book) {
+        books.remove(book);
+        // Remove from all borrowed lists
+        for (List<Book> list : borrowedBooks.values()) {
+            list.remove(book);
+        }
+    }
 
-	}
+    /**
+     * Adds a user to the library.
+     * 
+     * @param user The user to add.
+     */
+    public void addUser(User user) {
+        users.add(user);
+    }
 
-	/**
-	 * 
-	 * @param user
-	 * @param book
-	 */
-	public void borrowBook(User user, Book book) {
-		if (!book.isAvailable()) {
-			System.out.println("Sorry, this book is not available.");
-			return;
-		}
-		
-		int borrowed = getBorrowedCount(user);
-		
-		if (borrowed >= user.getMaxBooks()) {
-			System.out.println(user + " has reached max book limit.");
-			return;
-		}
-		
-		borrowedBooks.computeIfAbsent(user, k -> new ArrayList<>()).add(book);
-		book.borrowBook();
-	}
+    /**
+     * Removes a user from the library and clears their borrowed books.
+     * 
+     * @param user The user to remove.
+     */
+    public void removeUser(User user) {
+        users.remove(user);
+        borrowedBooks.remove(user);
+    }
 
-	/**
-	 * 
-	 * @param user
-	 * @param book
-	 */
-	public void returnBook(User user, Book book) {
-		List<Book> list = borrowedBooks.get(user);
-		
-		if (list != null && list.remove(book)) {
-			book.returnBook();
-		}
-		else {
-			System.out.println("Book was not borrowed by this user.");
-		}
-	}
+    /**
+     * Borrows a book for the given user if allowed.
+     * 
+     * @param user The user borrowing the book.
+     * @param book The book to be borrowed.
+     */
+    public void borrowBook(User user, Book book) {
+        if (!book.isAvailable()) {
+            System.out.println("Sorry, this book is not available.");
+            return;
+        }
 
-	/**
-	 * 
-	 * @param filename
-	 */
-	public void saveToFile(String filename) {
+        int borrowed = getBorrowedCount(user);
 
-	}
+        if (borrowed >= user.getMaxBooks()) {
+            System.out.println(user + " has reached max book limit.");
+            return;
+        }
 
-	/**
-	 * 
-	 * @param filename
-	 */
-	public void loadFromFile(String filename) {
+        borrowedBooks.computeIfAbsent(user, k -> new ArrayList<>()).add(book);
+        book.borrowBook();
+    }
 
-	}
+    /**
+     * Returns a book from a user back to the library.
+     * 
+     * @param user The user returning the book.
+     * @param book The book to return.
+     */
+    public void returnBook(User user, Book book) {
+        List<Book> list = borrowedBooks.get(user);
+
+        if (list != null && list.remove(book)) {
+            book.returnBook();
+        } else {
+            System.out.println("Book was not borrowed by this user.");
+        }
+    }
+
+    /**
+     * Saves the library data to a file.
+     * (Not implemented in this version.)
+     * 
+     * @param filename Name of the file.
+     */
+    public void saveToFile(String filename) {
+        // TODO: Implement file saving logic.
+    }
+
+    /**
+     * Loads the library data from a file.
+     * (Not implemented in this version.)
+     * 
+     * @param filename Name of the file.
+     */
+    public void loadFromFile(String filename) {
+        // TODO: Implement file loading logic.
+    }
+
+    /**
+     * Gets the list of all books.
+     * 
+     * @return List of books.
+     */
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    /**
+     * Gets the list of all users.
+     * 
+     * @return List of users.
+     */
+    public List<User> getUsers() {
+        return users;
+    }
+
+    /**
+     * Gets the list of books borrowed by a specific user.
+     * 
+     * @param user The user.
+     * @return List of borrowed books, or null if none.
+     */
+    public List<Book> getBorrowedBooks(User user) {
+        return borrowedBooks.get(user);
+    }
 }
