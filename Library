@@ -1,5 +1,10 @@
 package libraryManagementSystem;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +14,7 @@ import java.util.Map;
  * This class manages the collections of books and users,
  * as well as the borrowing relationships between them.
  * It provides methods to add books/users and to borrow/return books.
+ * It also supports saving and loading the library data to/from a file.
  * 
  * @author samar
  * @author dayanna
@@ -37,16 +43,6 @@ public class Library {
     public int getBorrowedCount(User user) {
         List<Book> list = borrowedBooks.get(user);
         return (list == null) ? 0 : list.size();
-    }
-
-    /**
-     * Gets the number of remaining books a user is allowed to borrow.
-     * 
-     * @param user The user.
-     * @return Remaining allowance.
-     */
-    public int getRemainingAllowance(User user) {
-        return user.getMaxBooks() - getBorrowedCount(user);
     }
 
     /**
@@ -106,7 +102,7 @@ public class Library {
         int borrowed = getBorrowedCount(user);
 
         if (borrowed >= user.getMaxBooks()) {
-            System.out.println(user + " has reached max book limit.");
+            System.out.println(user.getName() + " has reached max book limit.");
             return;
         }
 
@@ -131,23 +127,127 @@ public class Library {
     }
 
     /**
-     * Saves the library data to a file.
-     * (Not implemented in this version.)
+     * Saves the library data (books, users, and borrowed relationships)
+     * to a text file. Each line represents either a book or a user.
+     * 
+     * BOOK;isbn;title;author;genre
+     * USER;id;name;type;isbnBorrowed1,isbnBorrowed2,...
      * 
      * @param filename Name of the file.
      */
     public void saveToFile(String filename) {
-        // TODO: Implement file saving logic.
+        try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
+            // Save all books
+            for (Book b : books) {
+                out.printf("BOOK;%s;%s;%s;%s%n",
+                        b.getIsbn(),
+                        b.getTitle(),
+                        b.getAuthor(),
+                        b.getGenre().name());
+            }
+
+            // Save all users and their borrowed books
+            for (User u : users) {
+                String type = (u instanceof TeacherUser) ? "Teacher" : "Student";
+                out.print("USER;" + u.getId() + ";" + u.getName() + ";" + type + ";");
+
+                List<Book> borrowed = borrowedBooks.get(u);
+                if (borrowed != null && !borrowed.isEmpty()) {
+                    for (int i = 0; i < borrowed.size(); i++) {
+                        if (i > 0) {
+                            out.print(",");
+                        }
+                        out.print(borrowed.get(i).getIsbn());
+                    }
+                }
+                out.println();
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error saving library data: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Loads the library data from a file.
-     * (Not implemented in this version.)
+     * Loads the library data (books, users, and borrowed relationships)
+     * from a text file created by saveToFile.
+     * Existing data in the library is cleared before loading.
      * 
      * @param filename Name of the file.
      */
     public void loadFromFile(String filename) {
-        // TODO: Implement file loading logic.
+        // Clear current data
+        books.clear();
+        users.clear();
+        borrowedBooks.clear();
+
+        Map<String, Book> bookByIsbn = new HashMap<>();
+        List<String> userLines = new ArrayList<>();
+
+        try (BufferedReader in = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = in.readLine()) != null) {
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                String[] parts = line.split(";");
+                if (parts.length == 0) {
+                    continue;
+                }
+
+                if ("BOOK".equals(parts[0]) && parts.length >= 5) {
+                    String isbn = parts[1];
+                    String title = parts[2];
+                    String author = parts[3];
+                    Genre genre = Genre.valueOf(parts[4]);
+
+                    Book book = new Book(isbn, title, author, genre, true);
+                    books.add(book);
+                    bookByIsbn.put(isbn, book);
+                } else if ("USER".equals(parts[0])) {
+                    userLines.add(line);
+                }
+            }
+
+            for (String userLine : userLines) {
+                String[] parts = userLine.split(";");
+                if (parts.length < 4) {
+                    continue;
+                }
+
+                String id = parts[1];
+                String name = parts[2];
+                String type = parts[3];
+
+                User user;
+                if ("Teacher".equalsIgnoreCase(type)) {
+                    user = new TeacherUser(id, name);
+                } else {
+                    user = new StudentUser(id, name);
+                }
+                users.add(user);
+
+                if (parts.length >= 5 && !parts[4].isBlank()) {
+                    String[] isbns = parts[4].split(",");
+                    for (String isbn : isbns) {
+                        Book b = bookByIsbn.get(isbn);
+                        if (b != null) {
+                            borrowedBooks
+                                .computeIfAbsent(user, k -> new ArrayList<>())
+                                .add(b);
+                            b.borrowBook();
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error loading library data: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
