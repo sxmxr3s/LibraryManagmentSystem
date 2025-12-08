@@ -10,35 +10,36 @@ package libraryManagementSystem;
  */
 public class StudentUser extends User {
 
-	/**
-	 * Initializes the ID and name from the superclass User.
-	 * 
-	 * @param id Student ID.
-	 * @param name Student Name.
-	 */
-	public StudentUser(String id, String name) {
-		super(id, name, 5);
-	}
+    /**
+     * Initializes the ID and name from the superclass User.
+     * 
+     * @param id Student ID.
+     * @param name Student Name.
+     */
+    public StudentUser(String id, String name) {
+        super(id, name, 5);
+    }
 
-	/**
-	 * Tells the student what the max amount of books that can be 
-	 * borrowed is.
-	 * 
-	 * @return Maximum books allowed.
-	 */
-	public int getMaxBooks() {
-		return 5;
-	}
+    /**
+     * Tells the student what the max amount of books that can be 
+     * borrowed is.
+     * 
+     * @return Maximum books allowed.
+     */
+    @Override
+    public int getMaxBooks() {
+        return 5;
+    }
 
-	/**
-	 * Overrides the toString() method and prints it out in this format:
-	 * 
-	 * "Student User: [{id}, {name}]
-	 * Maximum Books Allowed: {maxBooks}"
-	 */
-	@Override
-	public String toString() {
-		return "Student User: [" + getId() + ", " + getName() + 
-				"]\nMaximum Books Allowed: " + getMaxBooks();
-	}
+    /**
+     * Overrides the toString() method and prints it out in this format:
+     * 
+     * "Student User: [{id}, {name}]
+     * Maximum Books Allowed: {maxBooks}"
+     */
+    @Override
+    public String toString() {
+        return "Student User: [" + getId() + ", " + getName() + 
+                "]\nMaximum Books Allowed: " + getMaxBooks();
+    }
 }
