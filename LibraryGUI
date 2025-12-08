@@ -1,43 +1,580 @@
 package libraryManagementSystem;
 
-import java.awt.EventQueue;
+import java.awt.*;
+import javax.swing.*;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+/**
+ * This class provides a graphical user interface for the 
+ * Library Management System. It follows the prototype design:
+ * a main menu and separate screens for managing books, users,
+ * and borrowing/returning books.
+ * 
+ * @author samar
+ * @author dayanna
+ * @author chanel
+ */
 public class LibraryGUI extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private Library library;
+    private static final String CARD_MENU   = "MENU";
+    private static final String CARD_BOOKS  = "BOOKS";
+    private static final String CARD_USERS  = "USERS";
+    private static final String CARD_BORROW = "BORROW";
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LibraryGUI frame = new LibraryGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    private Library library;
 
-	/**
-	 * Create the frame.
-	 */
-	public LibraryGUI() {
-		library = new Library();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
+    private JPanel cardsPanel;
+    private JTable booksTable;
+    private JTable usersTable;
+    private JComboBox<User> userCombo;
+    private JComboBox<Book> bookCombo;
 
-	}
+    /**
+     * Initializes the GUI and its screens.
+     */
+    public LibraryGUI() {
+        this.library = new Library();
+        initFrame();
+        initCards();
+    }
+
+    /**
+     * Sets up the main frame properties.
+     */
+    private void initFrame() {
+        setTitle("Library System");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900, 500);
+        setLocationRelativeTo(null);
+
+        cardsPanel = new JPanel(new CardLayout());
+        add(cardsPanel, BorderLayout.CENTER);
+    }
+
+    /**
+     * Creates all screens (cards) and adds them to the CardLayout.
+     */
+    private void initCards() {
+        cardsPanel.add(createMenuPanel(), CARD_MENU);
+        cardsPanel.add(createManageBooksPanel(), CARD_BOOKS);
+        cardsPanel.add(createManageUsersPanel(), CARD_USERS);
+        cardsPanel.add(createBorrowReturnPanel(), CARD_BORROW);
+
+        showCard(CARD_MENU);
+    }
+
+    /**
+     * Switches the visible card.
+     * 
+     * @param cardName The name of the card to show.
+     */
+    private void showCard(String cardName) {
+        CardLayout cl = (CardLayout) cardsPanel.getLayout();
+        cl.show(cardsPanel, cardName);
+    }
+
+    /**
+     * Creates the main menu panel with navigation buttons.
+     * 
+     * @return Menu panel.
+     */
+    private JPanel createMenuPanel() {
+        JPanel panel = createBasePanel();
+
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+
+        JLabel title = new JLabel("Library System");
+        title.setFont(new Font("Serif", Font.BOLD, 40));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel subtitle = new JLabel("Welcome to the Library!");
+        subtitle.setFont(new Font("Serif", Font.PLAIN, 20));
+        subtitle.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JButton manageBooksButton = createBlueButton("Manage Books");
+        JButton manageUsersButton = createBlueButton("Manage Users");
+        JButton borrowReturnButton = createBlueButton("Borrow / Return");
+        JButton saveDataButton = createBlueButton("Save Data");
+        JButton loadDataButton = createBlueButton("Load Data");
+        JButton exitButton = new JButton("Exit");
+
+        exitButton.setBorderPainted(false);
+        exitButton.setContentAreaFilled(false);
+        exitButton.setForeground(Color.BLACK);
+        exitButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+
+        gbc.gridy = 0;
+        panel.add(title, gbc);
+
+        gbc.gridy = 1;
+        panel.add(subtitle, gbc);
+
+        gbc.gridy = 2;
+        panel.add(manageBooksButton, gbc);
+
+        gbc.gridy = 3;
+        panel.add(manageUsersButton, gbc);
+
+        gbc.gridy = 4;
+        panel.add(borrowReturnButton, gbc);
+
+        gbc.gridy = 5;
+        panel.add(saveDataButton, gbc);
+
+        gbc.gridy = 6;
+        panel.add(loadDataButton, gbc);
+
+        gbc.gridy = 7;
+        panel.add(exitButton, gbc);
+
+        //actions
+        manageBooksButton.addActionListener(e -> {
+            updateBooksTable();
+            showCard(CARD_BOOKS);
+        });
+
+        manageUsersButton.addActionListener(e -> {
+            updateUsersTable();
+            showCard(CARD_USERS);
+        });
+
+        borrowReturnButton.addActionListener(e -> {
+            updateBorrowCombos();
+            showCard(CARD_BORROW);
+        });
+
+        saveDataButton.addActionListener(e -> {
+            library.saveToFile("librarydata.txt");
+            javax.swing.JOptionPane.showMessageDialog(
+                    this, 
+                    "Library data saved to librarydata.txt",
+                    "Save Data",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        loadDataButton.addActionListener(e -> {
+            library.loadFromFile("librarydata.txt");
+            updateBooksTable();
+            updateUsersTable();
+            updateBorrowCombos();
+            javax.swing.JOptionPane.showMessageDialog(
+                    this, 
+                    "Library data loaded from librarydata.txt",
+                    "Load Data",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        exitButton.addActionListener(e -> System.exit(0));
+
+        return panel;
+    }
+
+    /**
+     * Creates the "Manage Books" screen with table and controls.
+     * 
+     * @return Books management panel.
+     */
+    private JPanel createManageBooksPanel() {
+        JPanel panel = createBasePanel();
+        panel.setLayout(new BorderLayout());
+
+        // ----- NORTH: title + buttons -----
+        JPanel northPanel = new JPanel();
+        northPanel.setOpaque(false);
+        northPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 15, 10, 15);
+
+        JLabel title = new JLabel("Manage Books", SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 32));
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        northPanel.add(title, gbc);
+
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+
+        JButton addBookButton = createBlueButton("Add Book");
+        JButton removeBookButton = createBlueButton("Remove Book");
+        JButton showAllButton = createBlueButton("Show All Books");
+
+        gbc.gridx = 0;
+        northPanel.add(addBookButton, gbc);
+        gbc.gridx = 1;
+        northPanel.add(removeBookButton, gbc);
+        gbc.gridx = 2;
+        northPanel.add(showAllButton, gbc);
+
+        panel.add(northPanel, BorderLayout.NORTH);
+
+        // ----- CENTER: table -----
+        booksTable = new JTable();
+        JScrollPane scroll = new JScrollPane(booksTable);
+        scroll.getViewport().setBackground(new Color(252, 244, 207));
+        panel.add(scroll, BorderLayout.CENTER);
+
+        // ----- SOUTH: back button -----
+        JButton backButton = createBlueButton("Back to Menu");
+        JPanel bottom = new JPanel();
+        bottom.setOpaque(false);
+        bottom.add(backButton);
+        panel.add(bottom, BorderLayout.SOUTH);
+
+        // actions
+        addBookButton.addActionListener(e -> addBookDialog());
+        removeBookButton.addActionListener(e -> removeSelectedBook());
+        showAllButton.addActionListener(e -> updateBooksTable());
+        backButton.addActionListener(e -> showCard(CARD_MENU));
+
+        return panel;
+    }
+
+    /**
+     * Creates the "Manage Users" screen with table and controls.
+     * 
+     * @return Users management panel.
+     */
+    private JPanel createManageUsersPanel() {
+        JPanel panel = createBasePanel();
+        panel.setLayout(new BorderLayout());
+
+        // ----- NORTH: title + buttons -----
+        JPanel northPanel = new JPanel();
+        northPanel.setOpaque(false);
+        northPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 15, 10, 15);
+
+        JLabel title = new JLabel("Manage Users", SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 32));
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        northPanel.add(title, gbc);
+
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+
+        JButton addUserButton = createBlueButton("Add User");
+        JButton removeUserButton = createBlueButton("Remove User");
+        JButton showAllUsersButton = createBlueButton("Show All Users");
+
+        gbc.gridx = 0;
+        northPanel.add(addUserButton, gbc);
+        gbc.gridx = 1;
+        northPanel.add(removeUserButton, gbc);
+        gbc.gridx = 2;
+        northPanel.add(showAllUsersButton, gbc);
+
+        panel.add(northPanel, BorderLayout.NORTH);
+
+        usersTable = new JTable();
+        JScrollPane scroll = new JScrollPane(usersTable);
+        scroll.getViewport().setBackground(new Color(252, 244, 207));
+        panel.add(scroll, BorderLayout.CENTER);
+
+        JButton backButton = createBlueButton("Back to Menu");
+        JPanel bottom = new JPanel();
+        bottom.setOpaque(false);
+        bottom.add(backButton);
+        panel.add(bottom, BorderLayout.SOUTH);
+
+        // actions
+        addUserButton.addActionListener(e -> addUserDialog());
+        removeUserButton.addActionListener(e -> removeSelectedUser());
+        showAllUsersButton.addActionListener(e -> updateUsersTable());
+        backButton.addActionListener(e -> showCard(CARD_MENU));
+
+        return panel;
+    }
+
+    /**
+     * Creates the "Borrow / Return Books" screen with combo boxes and actions.
+     * 
+     * @return Borrow/return panel.
+     */
+    private JPanel createBorrowReturnPanel() {
+        JPanel panel = createBasePanel();
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 20, 10, 20);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+
+        JLabel title = new JLabel("Borrow / Return Books", SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 32));
+
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        panel.add(title, gbc);
+        gbc.gridwidth = 1;
+
+        JLabel userLabel = new JLabel("Select User:");
+        userLabel.setFont(new Font("Serif", Font.PLAIN, 18));
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        panel.add(userLabel, gbc);
+
+        userCombo = new JComboBox<>();
+        gbc.gridx = 1;
+        panel.add(userCombo, gbc);
+
+        JLabel bookLabel = new JLabel("Select Book:");
+        bookLabel.setFont(new Font("Serif", Font.PLAIN, 18));
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+        panel.add(bookLabel, gbc);
+
+        bookCombo = new JComboBox<>();
+        gbc.gridx = 1;
+        panel.add(bookCombo, gbc);
+
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        JButton borrowButton = createBlueButton("Borrow");
+        panel.add(borrowButton, gbc);
+
+        gbc.gridx = 1;
+        JButton returnButton = createBlueButton("Return");
+        panel.add(returnButton, gbc);
+
+        gbc.gridy = 4;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        JButton backButton = createBlueButton("Back to Menu");
+        panel.add(backButton, gbc);
+
+        borrowButton.addActionListener(e -> borrowSelectedBook());
+        returnButton.addActionListener(e -> returnSelectedBook());
+        backButton.addActionListener(e -> showCard(CARD_MENU));
+
+        return panel;
+    }
+
+
+    private JPanel createBasePanel() {
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(252, 244, 207)); // baby yellow-ish
+        return panel;
+    }
+
+    private JButton createBlueButton(String text) {
+        JButton button = new JButton(text);
+        button.setBackground(new Color(132, 160, 233)); // light blue
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Serif", Font.BOLD, 16));
+        return button;
+    }
+
+
+    private void addBookDialog() {
+        String isbn = JOptionPane.showInputDialog(this, "Enter ISBN:");
+        if (isbn == null || isbn.isBlank()) return;
+
+        String title = JOptionPane.showInputDialog(this, "Enter title:");
+        if (title == null || title.isBlank()) return;
+
+        String author = JOptionPane.showInputDialog(this, "Enter author:");
+        if (author == null || author.isBlank()) return;
+
+        Genre[] genres = Genre.values();
+        Genre genre = (Genre) JOptionPane.showInputDialog(
+                this, "Select genre:", "Genre",
+                JOptionPane.PLAIN_MESSAGE, null, genres, genres[0]);
+        if (genre == null) return;
+
+        Book book = new Book(isbn, title, author, genre, true);
+        library.addBook(book);
+        updateBooksTable();
+        updateBorrowCombos();
+    }
+
+    private void removeSelectedBook() {
+        int row = booksTable.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a book to remove.");
+            return;
+        }
+        String isbn = (String) booksTable.getValueAt(row, 0);
+
+        Book toRemove = null;
+        for (Book b : library.getBooks()) {
+            if (b.getIsbn().equals(isbn)) {
+                toRemove = b;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            library.removeBook(toRemove);
+            updateBooksTable();
+            updateBorrowCombos();
+        }
+    }
+
+    private void addUserDialog() {
+        String id = JOptionPane.showInputDialog(this, "Enter user ID:");
+        if (id == null || id.isBlank()) return;
+
+        String name = JOptionPane.showInputDialog(this, "Enter name:");
+        if (name == null || name.isBlank()) return;
+
+        String[] options = { "Student", "Teacher" };
+        String type = (String) JOptionPane.showInputDialog(
+                this, "Select user type:", "User Type",
+                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        if (type == null) return;
+
+        User user = "Student".equals(type)
+                ? new StudentUser(id, name)
+                : new TeacherUser(id, name);
+
+        library.addUser(user);
+        updateUsersTable();
+        updateBorrowCombos();
+    }
+
+    private void removeSelectedUser() {
+        int row = usersTable.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a user to remove.");
+            return;
+        }
+        String id = (String) usersTable.getValueAt(row, 0);
+
+        User toRemove = null;
+        for (User u : library.getUsers()) {
+            if (u.getId().equals(id)) {
+                toRemove = u;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            library.removeUser(toRemove);
+            updateUsersTable();
+            updateBorrowCombos();
+        }
+    }
+
+    private void updateBooksTable() {
+        String[] columns = { "ISBN", "Title", "Author", "Genre", "Available" };
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        for (Book b : library.getBooks()) {
+            Object[] row = {
+                    b.getIsbn(),
+                    b.getTitle(),
+                    b.getAuthor(),
+                    b.getGenre(),
+                    b.isAvailable() ? "YES" : "NO"
+            };
+            model.addRow(row);
+        }
+
+        booksTable.setModel(model);
+        booksTable.revalidate();
+        booksTable.repaint();
+    }
+
+    private void updateUsersTable() {
+        String[] columns = { "ID", "Name", "Type", "Borrowed Books" };
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        for (User u : library.getUsers()) {
+            String type = (u instanceof TeacherUser) ? "Teacher" : "Student";
+            int borrowed = library.getBorrowedCount(u);
+
+            Object[] row = {
+                    u.getId(),
+                    u.getName(),
+                    type,
+                    borrowed
+            };
+            model.addRow(row);
+        }
+
+        usersTable.setModel(model);
+        usersTable.revalidate();
+        usersTable.repaint();
+    }
+
+    private void updateBorrowCombos() {
+        if (userCombo == null || bookCombo == null) return;
+
+        userCombo.removeAllItems();
+        for (User u : library.getUsers()) {
+            userCombo.addItem(u);
+        }
+
+        bookCombo.removeAllItems();
+        for (Book b : library.getBooks()) {
+            bookCombo.addItem(b);
+        }
+    }
+
+    private void borrowSelectedBook() {
+        User user = (User) userCombo.getSelectedItem();
+        Book book = (Book) bookCombo.getSelectedItem();
+
+        if (user == null || book == null) {
+            JOptionPane.showMessageDialog(this, "Please select a user and a book.");
+            return;
+        }
+
+        if (!book.isAvailable()) {
+            JOptionPane.showMessageDialog(this, "This book is not available.");
+            return;
+        }
+
+        int borrowed = library.getBorrowedCount(user);
+        if (borrowed >= user.getMaxBooks()) {
+            JOptionPane.showMessageDialog(this, user.getName() + " has reached the max book limit.");
+            return;
+        }
+
+        library.borrowBook(user, book);
+        updateBooksTable();
+        updateUsersTable();
+        updateBorrowCombos();
+    }
+
+    private void returnSelectedBook() {
+        User user = (User) userCombo.getSelectedItem();
+        Book book = (Book) bookCombo.getSelectedItem();
+
+        if (user == null || book == null) {
+            JOptionPane.showMessageDialog(this, "Please select a user and a book.");
+            return;
+        }
+
+        List<Book> borrowed = library.getBorrowedBooks(user);
+        if (borrowed == null || !borrowed.contains(book)) {
+            JOptionPane.showMessageDialog(this, "This book is not borrowed by the selected user.");
+            return;
+        }
+
+        library.returnBook(user, book);
+        updateBooksTable();
+        updateUsersTable();
+        updateBorrowCombos();
+    }
+
+    /**
+     * Entry point of the application. Starts the GUI.
+     * 
+     * @param args Command-line arguments.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            LibraryGUI gui = new LibraryGUI();
+            gui.setVisible(true);
+        });
+    }
 }
