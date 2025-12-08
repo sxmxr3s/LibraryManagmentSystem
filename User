@@ -9,59 +9,59 @@ package libraryManagementSystem;
  * @author chanel
  */
 public abstract class User {
-	private String id;
-	private String name;
-	private int maxBooks;
+    private String id;
+    private String name;
+    private int maxBooks;
 
-	/**
-	 * Initializes the id, name, and maxBooks of a user.
-	 * 
-	 * @param id User ID.
-	 * @param name User Name.
-	 * @param maxBooks Max borrow-able books for user.
-	 */
-	public User(String id, String name, int maxBooks) {
-		this.id = id;
-		this.name = name;
-		this.maxBooks = maxBooks;
-	}
+    /**
+     * Initializes the id, name, and maxBooks of a user.
+     * 
+     * @param id User ID.
+     * @param name User Name.
+     * @param maxBooks Max borrow-able books for user.
+     */
+    public User(String id, String name, int maxBooks) {
+        this.id = id;
+        this.name = name;
+        this.maxBooks = maxBooks;
+    }
 
-	/**
-	 * Tells user what the max amount of books they can borrow is.
-	 * 
-	 * @return Max number of books that can be borrowed.
-	 */
-	public abstract int getMaxBooks();
+    /**
+     * Tells user what the max amount of books they can borrow is.
+     * 
+     * @return Max number of books that can be borrowed.
+     */
+    public abstract int getMaxBooks();
 
-	/**
-	 * This class overrides the toString() method and prints it in 
-	 * this format:
-	 * 
-	 * "User: {id}
-	 * Name: {name}
-	 * Max Books Allowed: {maxBooks}"
-	 */
-	@Override
-	public String toString() {
-		return "User: " + getId() + "\nName: " + getName() + 
-				"\nMax Books Allowed: " + maxBooks;
-	}
+    /**
+     * This class overrides the toString() method and prints it in 
+     * this format:
+     * 
+     * "User: {id}
+     * Name: {name}
+     * Max Books Allowed: {maxBooks}"
+     */
+    @Override
+    public String toString() {
+        return "User: " + getId() + "\nName: " + getName() + 
+                "\nMax Books Allowed: " + maxBooks;
+    }
 
-	/**
-	 * Gets the user ID.
-	 * 
-	 * @return The ID.
-	 */
-	public String getId() {
-		return id;
-	}
+    /**
+     * Gets the user ID.
+     * 
+     * @return The ID.
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Gets the name.
-	 * 
-	 * @return The name.
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Gets the name.
+     * 
+     * @return The name.
+     */
+    public String getName() {
+        return name;
+    }
 }
