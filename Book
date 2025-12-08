@@ -9,56 +9,98 @@ package libraryManagementSystem;
  * @author chanel
  */
 public class Book implements Borrowable {
-	private String isbn;
-	private String title;
-	private String author;
-	private Genre genre;
-	private boolean available;
+    private String isbn;
+    private String title;
+    private String author;
+    private Genre genre;
+    private boolean available;
 
-	/**
-	 * 
-	 * @param isbn
-	 * @param title
-	 * @param author
-	 * @param genre
-	 * @param available
-	 */
-	public Book(String isbn, String title, String author, 
-			Genre genre, boolean available) {
-		this.isbn = isbn;
-		this.title = title;
-		this.author = author;
-		this.genre = genre;
-		this.available = available;
-	}
+    /**
+     * Initializes all fields of a Book.
+     * 
+     * @param isbn Book ISBN.
+     * @param title Book title.
+     * @param author Book author.
+     * @param genre Book genre.
+     * @param available Initial availability.
+     */
+    public Book(String isbn, String title, String author, 
+            Genre genre, boolean available) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.available = available;
+    }
 
-	/**
-	 * 
-	 */
-	public void borrowBook() {
-		this.available = false;
-	}
+    /**
+     * Marks this book as borrowed.
+     */
+    @Override
+    public void borrowBook() {
+        this.available = false;
+    }
 
-	/**
-	 * 
-	 */
-	public void returnBook() {
-		this.available = true;
-	}
+    /**
+     * Marks this book as returned.
+     */
+    @Override
+    public void returnBook() {
+        this.available = true;
+    }
 
-	/**
-	 * 
-	 */
-	@Override
-	public String toString() {
-		return "Book [isbn=" + isbn + ", title=" + title + ", author=" + author + ", genre=" + genre + ", available="
-				+ available + "]";
-	}
+    /**
+     * Returns a String representation of the book.
+     */
+    @Override
+    public String toString() {
+        return "Book [isbn=" + isbn + ", title=" + title + ", author=" + author 
+                + ", genre=" + genre + ", available=" + available + "]";
+    }
 
-	/**
-	 * @return the available
-	 */
-	public boolean isAvailable() {
-		return available;
-	}
+    /**
+     * Checks if the book is available.
+     * 
+     * @return true if available, false otherwise.
+     */
+    public boolean isAvailable() {
+        return available;
+    }
+
+    /**
+     * Gets the ISBN of the book.
+     * 
+     * @return the isbn.
+     */
+    public String getIsbn() {
+        return isbn;
+    }
+
+    /**
+     * Gets the title of the book.
+     * 
+     * @return the title.
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Gets the author of the book.
+     * 
+     * @return the author.
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * Gets the genre of the book.
+     * 
+     * @return the genre.
+     */
+    public Genre getGenre() {
+        return genre;
+    }
 }
+
